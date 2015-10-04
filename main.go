@@ -24,10 +24,22 @@ func makeFractal(imageFile *os.File, width int, height int) {
 
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
 		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			opacity := color.Gray{uint8(x ^ y)}
-			img.Set(x, y, opacity)
+			c := color.RGBA{r(x, y), g(x, y), b(x, y), 255}
+			img.Set(x, y, c)
 		}
 	}
 
 	png.Encode(imageFile, img)
+}
+
+func r(x, y int) uint8 {
+	return uint8(x ^ y - x ^ x)
+}
+
+func g(x, y int) uint8 {
+	return uint8(x | y)
+}
+
+func b(x, y int) uint8 {
+	return uint8(x ^ y - y ^ y)
 }
